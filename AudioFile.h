@@ -27,6 +27,7 @@
 #import "AudioSegmentTree.h"
 #import "PCMAudioBuffer.h"
 #import "SeekIndex.h"
+#import <AVFoundation/AVFoundation.h>
 
 // if you want to play to end of file
 #define AudioFileEndTime	1000000000.0

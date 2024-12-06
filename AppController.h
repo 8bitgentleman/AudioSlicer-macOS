@@ -29,6 +29,8 @@
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
 
+// AppController.h
+- (IBAction)showPreferences:(id)sender;
 - (IBAction)showInspector:(id)sender;
 - (IBAction)toggleInspector:(id)sender;
 

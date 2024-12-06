@@ -3,14 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3DD87BD924BF32800038DCE6 /* taglib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DD87BD724BF32800038DCE6 /* taglib.framework */; };
-		3DD87BDA24BF32800038DCE6 /* mad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DD87BD824BF32800038DCE6 /* mad.framework */; };
-		3DD87BDC24BF3B160038DCE6 /* mad.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3DD87BD824BF32800038DCE6 /* mad.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3DD87BDD24BF3B160038DCE6 /* taglib.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3DD87BD724BF32800038DCE6 /* taglib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		73032C6305DF825500899B94 /* AudioSegmentTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 73032C6105DF825500899B94 /* AudioSegmentTree.m */; };
 		73032C6905DF828C00899B94 /* AudioSegmentNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 73032C6705DF828C00899B94 /* AudioSegmentNode.m */; };
 		730EA7240B0F495F00102AEA /* AudioSlicer_User_Guide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 730EA7180B0F492500102AEA /* AudioSlicer_User_Guide.pdf */; };
@@ -67,6 +63,8 @@
 		8D15AC310486D014006FF6A4 /* SplitDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* SplitDocument.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		97FD251A2D0339B600BEB97F /* libmad.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 97FD25192D0339B600BEB97F /* libmad.0.dylib */; };
+		97FD251C2D0339CD00BEB97F /* libtag.1.19.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 97FD251B2D0339CD00BEB97F /* libtag.1.19.1.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -116,8 +114,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3DD87BDC24BF3B160038DCE6 /* mad.framework in Copy Frameworks */,
-				3DD87BDD24BF3B160038DCE6 /* taglib.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,8 +133,6 @@
 		3D03626424C075DE006E9D1C /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/Preferences.nib; sourceTree = "<group>"; };
 		3D03626524C075DE006E9D1C /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/ProgressPanel.nib; sourceTree = "<group>"; };
 		3D03626624C075DE006E9D1C /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = en.lproj/SplitDocument.nib; sourceTree = "<group>"; };
-		3DD87BD724BF32800038DCE6 /* taglib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = taglib.framework; path = Frameworks/taglib.framework; sourceTree = "<group>"; };
-		3DD87BD824BF32800038DCE6 /* mad.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = mad.framework; path = Frameworks/mad.framework; sourceTree = "<group>"; };
 		73032C6005DF825500899B94 /* AudioSegmentTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSegmentTree.h; sourceTree = "<group>"; };
 		73032C6105DF825500899B94 /* AudioSegmentTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioSegmentTree.m; sourceTree = "<group>"; };
 		73032C6605DF828C00899B94 /* AudioSegmentNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSegmentNode.h; sourceTree = "<group>"; };
@@ -214,6 +208,9 @@
 		73F6B57F0636C31700F07FED /* SplitDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SplitDocument.icns; path = Resources/SplitDocument.icns; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* AudioSlicer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioSlicer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		97FD25192D0339B600BEB97F /* libmad.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmad.0.dylib; path = ../../../../../opt/homebrew/Cellar/mad/0.15.1b/lib/libmad.0.dylib; sourceTree = "<group>"; };
+		97FD251B2D0339CD00BEB97F /* libtag.1.19.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtag.1.19.1.dylib; path = ../../../../../opt/homebrew/Cellar/taglib/1.13.1/lib/libtag.1.19.1.dylib; sourceTree = "<group>"; };
+		97FD251D2D0341FA00BEB97F /* AudioPreviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioPreviewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,11 +218,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97FD251C2D0339CD00BEB97F /* libtag.1.19.1.dylib in Frameworks */,
+				97FD251A2D0339B600BEB97F /* libmad.0.dylib in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				738E370F05DCE62D00E50ED7 /* CoreAudio.framework in Frameworks */,
 				738E371C05DCE63D00E50ED7 /* AudioUnit.framework in Frameworks */,
-				3DD87BDA24BF32800038DCE6 /* mad.framework in Frameworks */,
-				3DD87BD924BF32800038DCE6 /* taglib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +240,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* AudioSlicer */ = {
 			isa = PBXGroup;
 			children = (
+				97FD251D2D0341FA00BEB97F /* AudioPreviewController.h */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
@@ -303,9 +301,9 @@
 		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				97FD251B2D0339CD00BEB97F /* libtag.1.19.1.dylib */,
+				97FD25192D0339B600BEB97F /* libmad.0.dylib */,
 				73AEE97F0ACEDAAE00C21CD6 /* IntervalSlider.xcodeproj */,
-				3DD87BD824BF32800038DCE6 /* mad.framework */,
-				3DD87BD724BF32800038DCE6 /* taglib.framework */,
 				738E371B05DCE63D00E50ED7 /* AudioUnit.framework */,
 				738E370E05DCE62D00E50ED7 /* CoreAudio.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
@@ -472,7 +470,8 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1200;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1610;
 			};
 			buildConfigurationList = 73DE30BF0876D02F006EC03A /* Build configuration list for PBXProject "AudioSlicer" */;
 			compatibilityVersion = "Xcode 2.4";
@@ -654,6 +653,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -666,9 +666,20 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				"HEADER_SEARCH_PATHS[arch=*]" = /opt/homebrew/lib;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LD_RUNPATH_SEARCH_PATHS = "$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST)) @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
+					"@loader_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/taglib/1.13.1/lib,
+					/opt/homebrew/Cellar/mad/0.15.1b/lib,
+				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /opt/homebrew/lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lz",
@@ -690,6 +701,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -700,9 +712,20 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				"HEADER_SEARCH_PATHS[arch=*]" = /opt/homebrew/lib;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LD_RUNPATH_SEARCH_PATHS = "$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST)) @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
+					"@loader_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/taglib/1.13.1/lib,
+					/opt/homebrew/Cellar/mad/0.15.1b/lib,
+				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /opt/homebrew/lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lz",
@@ -721,7 +744,7 @@
 		73DE30C00876D02F006EC03A /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -740,8 +763,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -749,6 +774,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					/opt/homebrew/include,
+					/opt/homebrew/include/taglib,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				ONLY_ACTIVE_ARCH = YES;
 			};
@@ -757,7 +789,7 @@
 		73DE30C10876D02F006EC03A /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -776,7 +808,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -784,6 +818,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/homebrew/include,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 			};
 			name = Deployment;

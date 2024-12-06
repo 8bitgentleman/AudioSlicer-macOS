@@ -23,7 +23,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#include <mad/mad.h>
+#include </opt/homebrew/include/mad.h>
 
 @class MADDecoder;
 
@@ -97,4 +97,3 @@
 - (void)setSilenceDurationThreshold:(double)threshold;
 - (NSUInteger)decodeStartByteOffset;
 @end
-

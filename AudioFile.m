@@ -24,7 +24,7 @@
 #import "AudioFile.h"
 #import "AudioFileMP3.h"
 #import "ProgressPanel.h"
-
+#import <AVFoundation/AVFoundation.h>
 
 NSString	*AudioFileProgressChangedNotification = @"AudioFileProgressChangedNotification";
 NSString	*AudioFileAnalyzingFinishedNotification = @"AudioFileAnalyzingFinishedNotification";
@@ -49,9 +49,13 @@ static OSStatus coreAudioRenderProc(void *inRefCon, AudioUnitRenderActionFlags *
 
 @implementation AudioFile
 
-+ (size_t)uniqueFileIDForFile:(NSString *)path
-{
-	return [[[[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:NO] objectForKey:NSFileSize] unsignedLongValue];
++ (size_t)uniqueFileIDForFile:(NSString *)path {
+    NSError *error = nil;
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+    if (error) {
+        return 0;
+    }
+    return [[attributes objectForKey:NSFileSize] unsignedLongValue];
 }
 
 #pragma mark -
@@ -252,9 +256,41 @@ static OSStatus coreAudioRenderProc(void *inRefCon, AudioUnitRenderActionFlags *
 	return NO;
 }
 
-- (void)startPlayingFrom:(double)start to:(double)end
-{
-	[self startPlayingFrom:start to:end overlayBeepAt:0.0 beepDuration:0.0];
+- (void)startPlayingFrom:(double)start to:(double)end {
+    [self abortPlaying];
+    [audioBuffer reset];
+    
+    stopAudio = NO;
+    abortDecoding = NO;
+    audioThreadRunning = NO;
+    decoderThreadRunning = NO;
+    
+    if (start < 0.0) {
+        start = 0.0;
+    }
+    if (end > duration) {
+        end = duration;
+    }
+    decoderFromTime = start;
+    decoderToTime = end;
+    
+    decoderThreadRunning = YES;
+    [NSThread detachNewThreadSelector:@selector(decoderThread:)
+                           toTarget:self
+                         withObject:nil];
+    
+    while ([self getAudioChannels] == 0 || [self getAudioSampleRate] == 0) {
+        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+    }
+    
+    audioThreadRunning = YES;
+    [self openAudioUnitForChannels:[self getAudioChannels]
+                       sampleRate:[self getAudioSampleRate]];
+    [self setAudioVolume:audioVolume];
+    AudioOutputUnitStart(audioUnit);
+    [NSThread detachNewThreadSelector:@selector(audioThread:)
+                           toTarget:self
+                         withObject:[NSRunLoop currentRunLoop]];
 }
 
 - (void)startPlayingFrom:(double)start to:(double)end overlayBeepAt:(double)beepStart beepDuration:(double)beepDuration
@@ -559,90 +595,75 @@ static OSStatus coreAudioRenderProc(void *inRefCon, AudioUnitRenderActionFlags *
 
 #pragma mark -
 
-- (void)openAudioUnitForChannels:(int)channels sampleRate:(float)speed
-{
-	AudioStreamBasicDescription		format;
-	ComponentDescription			desc;
-	Component						comp;
-	AURenderCallbackStruct			callback;
-	
-	desc.componentType			= kAudioUnitType_Output;
-	desc.componentSubType		= kAudioUnitSubType_DefaultOutput;
-	desc.componentManufacturer  = kAudioUnitManufacturer_Apple;
-	desc.componentFlags			= 0;
-	desc.componentFlagsMask		= 0;
-	
-	comp = FindNextComponent(0, &desc);
-	if (comp == NULL) {
-		NSLog(@"FindNextComponent() failed");
-		return;
-	}
-	
-	if (OpenAComponent(comp, &audioUnit) != noErr) {
-		NSLog(@"OpenAComponent() failed");
-		return;
-	}
-	
-	if (AudioUnitInitialize(audioUnit) != 0) {
-		NSLog(@"AudioUnitInitialize() failed");
-		CloseComponent(audioUnit);
-		return;
-	}
-	
-	callback.inputProc			= coreAudioRenderProc;
-	callback.inputProcRefCon	= self;
-	
-	if (AudioUnitSetProperty(audioUnit, kAudioUnitProperty_SetRenderCallback,
-							 kAudioUnitScope_Input, 0,
-							 &callback, sizeof(callback)) != 0) {
-		NSLog(@"AudioUnitSetProperty(kAudioUnitProperty_SetRenderCallback) failed");
-		AudioUnitUninitialize(audioUnit);
-		CloseComponent(audioUnit);
-		return;
-	}
-	
-	format.mSampleRate			= speed;
-	format.mFormatID			= kAudioFormatLinearPCM;
-	format.mFormatFlags			= kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsBigEndian | kLinearPCMFormatFlagIsPacked;
-	format.mBytesPerPacket		= channels * 2;
-	format.mFramesPerPacket		= 1;
-	format.mBytesPerFrame		= format.mBytesPerPacket;
-	format.mChannelsPerFrame	= channels;
-	format.mBitsPerChannel		= 16;
-	
-	if (AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &format, sizeof(format)) != 0) {
-		NSLog(@"AudioUnitSetProperty(kAudioUnitProperty_StreamFormat) failed");
-		return;
-	}
+- (void)openAudioUnitForChannels:(int)channels sampleRate:(float)speed {
+    AudioComponentDescription desc = {0};
+    desc.componentType = kAudioUnitType_Output;
+    desc.componentSubType = kAudioUnitSubType_DefaultOutput;
+    desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+    
+    AudioComponent comp = AudioComponentFindNext(NULL, &desc);
+    if (!comp) {
+        NSLog(@"AudioComponentFindNext failed");
+        return;
+    }
+    
+    OSStatus status = AudioComponentInstanceNew(comp, &audioUnit);
+    if (status) {
+        NSLog(@"AudioComponentInstanceNew failed");
+        return;
+    }
+    
+    AURenderCallbackStruct callback = {
+        .inputProc = coreAudioRenderProc,
+        .inputProcRefCon = self
+    };
+    
+    AudioStreamBasicDescription streamFormat = {0};
+    streamFormat.mSampleRate = speed;
+    streamFormat.mFormatID = kAudioFormatLinearPCM;
+    streamFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsBigEndian;
+    streamFormat.mBytesPerPacket = channels * 2;
+    streamFormat.mFramesPerPacket = 1;
+    streamFormat.mBytesPerFrame = streamFormat.mBytesPerPacket;
+    streamFormat.mChannelsPerFrame = channels;
+    streamFormat.mBitsPerChannel = 16;
+    
+    AudioUnitSetProperty(audioUnit,
+                        kAudioUnitProperty_SetRenderCallback,
+                        kAudioUnitScope_Input,
+                        0,
+                        &callback,
+                        sizeof(callback));
+                        
+    AudioUnitSetProperty(audioUnit,
+                        kAudioUnitProperty_StreamFormat,
+                        kAudioUnitScope_Input,
+                        0,
+                        &streamFormat,
+                        sizeof(streamFormat));
+                        
+    AudioUnitInitialize(audioUnit);
 }
 
-- (void)closeAudioUnit
-{
-	AudioOutputUnitStop(audioUnit);
-	
-	if (AudioUnitUninitialize(audioUnit) != 0) {
-		NSLog(@"AudioUnitUninitialize() failed");
-	}
-	
-	if (CloseComponent(audioUnit) != noErr) {
-		NSLog(@"CloseComponent() failed");
-	}
+- (void)closeAudioUnit {
+    AudioOutputUnitStop(audioUnit);
+    AudioUnitUninitialize(audioUnit);
+    AudioComponentInstanceDispose(audioUnit);
 }
 
-- (OSStatus)renderAudioWithFlags:(AudioUnitRenderActionFlags)renderFlags buffer:(AudioBuffer *)ioData numFrames:(UInt32)numFrames
-{
-	if (stopAudio || abortDecoding) {
-		// just empty buffer, but return silence
-		[audioBuffer readDataInto:ioData->mData length:ioData->mDataByteSize];
-		bzero(ioData->mData, ioData->mDataByteSize);
-	} else {
-		size_t   len = [audioBuffer readDataInto:ioData->mData length:ioData->mDataByteSize];
-		if (len < ioData->mDataByteSize) {
-			bzero(ioData->mData + len, ioData->mDataByteSize - len);
-		}
-	}
-	
-	return 0;
+- (OSStatus)renderAudioWithFlags:(AudioUnitRenderActionFlags)renderFlags
+                         buffer:(AudioBuffer *)ioData
+                      numFrames:(UInt32)numFrames {
+    if (stopAudio || abortDecoding) {
+        [audioBuffer readDataInto:ioData->mData length:ioData->mDataByteSize];
+        memset(ioData->mData, 0, ioData->mDataByteSize);
+    } else {
+        size_t len = [audioBuffer readDataInto:ioData->mData length:ioData->mDataByteSize];
+        if (len < ioData->mDataByteSize) {
+            memset(ioData->mData + len, 0, ioData->mDataByteSize - len);
+        }
+    }
+    return noErr;
 }
 
 static OSStatus
